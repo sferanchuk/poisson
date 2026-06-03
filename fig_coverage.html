@@ -1,0 +1,71 @@
+<html>
+<body>
+<svg width="600" height="600">
+<g id="g1" transform="translate(50,50)">
+<text x="-20" y="5" font-size="20">A</text>
+<rect x="0" y="0" width="200" height="200" fill="none" stroke="black" />
+<line x1="0" x2="200" y1="0" y2="200" stroke="black" stroke-dasharray="5" />
+<text x="40" y="20">Larix (plant)</text>
+<text x="-150" y="-20" transform="rotate(-90)">log(frequency) * 0.5</text>
+<text x="50" y="220" >log(coverage)</text>
+</g>
+<g id="g2" transform="translate(350,50)">
+<text x="-20" y="5" font-size="20">B</text>
+<rect x="0" y="0" width="200" height="200" fill="none" stroke="black" />
+<line x1="0" x2="200" y1="0" y2="200" stroke="black" stroke-dasharray="5" />
+<text x="-150" y="-20" transform="rotate(-90)">log(frequency) * 0.5</text>
+<text x="50" y="220" >log(coverage)</text>
+<text x="40" y="20">Enterococcus (bacteria)</text>
+</g>
+<g id="g3" transform="translate(50,350)">
+<text x="-20" y="5" font-size="20">C</text>
+<rect x="0" y="0" width="200" height="200" fill="none" stroke="black" />
+<line x1="0" x2="200" y1="0" y2="200" stroke="black" stroke-dasharray="5" />
+<text x="-150" y="-20" transform="rotate(-90)">log(frequency) * 0.5</text>
+<text x="50" y="220" >log(coverage)</text>
+<text x="40" y="20">Boletus (fungi)</text>
+</g>
+<g id="g4" transform="translate(350,350)">
+<text x="-20" y="5" font-size="20">D</text>
+<rect x="0" y="0" width="200" height="200" fill="none" stroke="black" />
+<line x1="0" x2="200" y1="0" y2="200" stroke="black" stroke-dasharray="5" />
+<text x="-150" y="-20" transform="rotate(-90)">log(frequency) * 0.5</text>
+<text x="50" y="220" >log(coverage)</text>
+<text x="40" y="20">Amphimedon (metazoa)</text>
+</g>
+</svg>
+<script src="coverage.js"></script>
+<script>
+var i, j, k;
+var d;
+var maxlen = 10000;
+var sc = Math.log( maxlen );
+var ww = 20;
+var ofy = Math.log( ww );
+
+for ( i = 0; i < 4; i++ )
+{
+	d = "M ";
+	for ( j = 0; j < maxlen; j += ww )
+	{
+		var s = 0;
+		for ( k = j; k < j + ww; k++ )
+		{
+			if ( k == 0 ) continue;
+			s += data[i][k];
+		}
+		if ( s == 0 ) continue;
+		s /= ww;
+		d += ( 200 * Math.log( j + 1 ) / sc ) + "," + ( 200 - 100 * ( ( Math.log( s ) + ofy ) / sc ) ) + " ";
+	}
+	var p = document.createElementNS( "http://www.w3.org/2000/svg", "path" );
+	p.style.fill = "none";
+	p.style.stroke = "black";
+	p.style.strokeWidth = "2";
+	p.setAttribute( "d", d );
+	document.getElementById( "g" + ( i + 1 ) ).appendChild( p );
+}
+
+</script>
+</body>
+</html>
