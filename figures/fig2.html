@@ -1,0 +1,233 @@
+<html>
+<body>
+<svg width="1000" height="350">
+<g id="g1" transform="translate(90,60)" >
+<text x="0" y="-20" font-family="sans-serif" font-size="24">A</text>
+<line x1="0" x2="0" y1="0" y2="200" stroke="black" />
+<line x1="0" x2="200" y1="200" y2="200" stroke="black" />
+<text x="-10" y="30" font-family="sans-serif" font-size="12" text-anchor="end">95%</text><line x1="-4" x2="0" y1="25" y2="25" stroke="black" />
+<text x="-10" y="110" font-family="sans-serif" font-size="12" text-anchor="end">0.1%</text><line x1="-4" x2="0" y1="105" y2="105" stroke="black" />
+<text x="-10" y="150" font-family="sans-serif" font-size="12" text-anchor="end">0.01%</text><line x1="-4" x2="0" y1="145" y2="145" stroke="black" />
+<text x="-100" y="-55" font-family="sans-serif" font-size="14" font-weight="bold" transform="rotate(-90)" text-anchor="middle">fraction (log)</text>
+<text x="52" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">10</text><line x1="52" x2="52" y1="200" y2="204" stroke="black" />
+<text x="102" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">20</text><line x1="102" x2="102" y1="200" y2="204" stroke="black" />
+<text x="152" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">30</text><line x1="195" x2="195" y1="200" y2="204" stroke="black" />
+<text x="100" y="240" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">coverage value (linear)</text>
+</g>
+<g transform="translate(430,60)" >
+<text x="0" y="-20" font-family="sans-serif" font-size="24">B</text>
+<path id="p" fill="none" stroke="black" stroke-width="2" />
+<line x1="0" x2="0" y1="0" y2="200" stroke="black" />
+<line x1="0" x2="200" y1="200" y2="200" stroke="black" />
+<line x1="10" x2="150" y1="55" y2="195" stroke="blue" />
+<text x="-10" y="30" font-family="sans-serif" font-size="12" text-anchor="end">95%</text><line x1="-4" x2="0" y1="25" y2="25" stroke="black" />
+<text x="-10" y="110" font-family="sans-serif" font-size="12" text-anchor="end">0.1%</text><line x1="-4" x2="0" y1="105" y2="105" stroke="black" />
+<text x="-10" y="150" font-family="sans-serif" font-size="12" text-anchor="end">0.01%</text><line x1="-4" x2="0" y1="145" y2="145" stroke="black" />
+<text x="-100" y="-55" font-family="sans-serif" font-size="14" font-weight="bold" transform="rotate(-90)" text-anchor="middle">fraction (log)</text>
+
+<text x="0" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">1</text><line x1="0" x2="0" y1="200" y2="204" stroke="black" />
+<text x="100" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">100</text><line x1="100" x2="100" y1="200" y2="204" stroke="black" />
+<text x="200" y="215" font-family="sans-serif" font-size="12" text-anchor="middle">10k</text><line x1="200" x2="200" y1="200" y2="204" stroke="black" />
+<text x="100" y="240" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">coverage value (log)</text>
+<line x1="170" x2="185" y1="0" y2="0" stroke="black" stroke-width="2" />
+<text x="190" y="5" font-family="sans-serif" font-size="12">Larix</text>
+<line x1="170" x2="185" y1="15" y2="15" stroke="blue" />
+<text x="190" y="20" font-family="sans-serif" font-size="12">model</text>
+</g>
+</svg>
+<script src="larix_hist.js"></script>
+<script>
+var i, j, k;
+
+var ml_a = 40;
+var sc_a = Math.log(10000000); 
+
+var maxlen=10000;
+var sc = 2 * Math.log( maxlen );
+
+var sc_ar = 0.2;
+var d = "M ";
+var pr = document.createElementNS( "http://www.w3.org/2000/svg", "path" );
+pr.style.fill = "none";
+pr.style.stroke = "black";
+pr.strokeWidth = "2";
+for ( j = 0; j < ml_a - 1; j++ )
+{
+	var r = document.createElementNS( "http://www.w3.org/2000/svg", "rect" );
+	r.style.stroke = "none";
+	r.style.fill = "gray";
+	var y = 200 * Math.log( data_l[j] ) / sc;
+	r.setAttribute( "x", 2 + 200 * j / ml_a );
+	r.setAttribute( "y", 200 - y );
+	r.setAttribute( "width", 3 );
+	r.setAttribute( "height", y );
+	document.getElementById( "g1" ).appendChild( r );
+	
+	d += ( 2 + 200 * j / ml_a ) + ",";
+	d += ( 200 - 200 * ( 1. / Math.sqrt( data_l[j] ) ) / sc_ar ) + " ";
+}
+pr.setAttribute( "d", d );
+//document.getElementById( "g1" ).appendChild( pr );
+
+var x_d = [], y_d = [];
+var ww = 20;
+d = "M ";
+for ( j = 0; j < maxlen; j += ww )
+{
+	var s = 0;
+	for ( k = 0; k < ww; k++ ) s += data_l[ j + k ];
+	if ( s < 1 ) continue;
+	d += ( 200 * Math.log( j + 1 ) / Math.log( maxlen ) ) + "," + ( 200 - 200 * ( ( Math.log( s ) ) / sc ) ) + " ";
+	x_d.push( Math.log( j + 1 ) );
+	y_d.push( Math.log( s ) );
+}
+document.getElementById( "p" ).setAttribute( "d", d );
+
+var s0 = data_l[0], ss = 0;
+for ( k = 0; k < maxlen; k++ ) ss += data_l[k];
+console.log( s0 / ss );
+
+function calculateLinearMLE(x, y) {
+    var n = x.length;
+    if (n === 0 || n !== y.length) return null;
+
+    // 1. Считаем средние значения (для формул регрессии)
+    var sumX = 0, sumY = 0;
+    for (var i = 0; i < n; i++) {
+        sumX += x[i];
+        sumY += y[i];
+    }
+    var meanX = sumX / n;
+    var meanY = sumY / n;
+
+    // 2. Находим наклон (a) и сдвиг (b) 
+    // Математически для нормального шума MLE-оценки "a" и "b" в точности равны МНК
+    var num = 0;
+    var den = 0;
+    for (var i = 0; i < n; i++) {
+        num += (x[i] - meanX) * (y[i] - meanY);
+        var diffX = x[i] - meanX;
+        den += diffX * diffX;
+    }
+    
+    var a = num / den;
+    var b = meanY - a * meanX;
+
+    // 3. Считаем сумму квадратов ошибок и находим MLE-оценку шума (sigma^2)
+    var sumSquaredErrors = 0;
+    for (var i = 0; i < n; i++) {
+        var error = y[i] - (a * x[i] + b);
+        sumSquaredErrors += error * error;
+    }
+    // MLE-оценка дисперсии шума делится строго на n (а не на n-1, как в МНК)
+    var sigmaSquared = sumSquaredErrors / n; 
+    var sigma = Math.sqrt(sigmaSquared);
+
+    // 4. Вычисляем финальное максимальное Лог-Правдоподобие (Log-Likelihood)
+    // Формула: sum( -ln(sigma) - 0.5*ln(2*pi) - (error^2)/(2*sigma^2) )
+    var logLikelihood = 0;
+    var constantPart = -0.5 * Math.log(2 * Math.PI);
+    
+    for (var i = 0; i < n; i++) {
+        var error = y[i] - (a * x[i] + b);
+        logLikelihood += -Math.log(sigma) + constantPart - (error * error) / (2 * sigmaSquared);
+    }
+
+    // Возвращаем объект со всеми MLE параметрами модели
+    return {
+        slope: a,               // Наклон прямой (alpha)
+        intercept: b,           // Сдвиг прямой
+        sigma: sigma,           // Оцененный масштаб шума
+        logLikelihood: logLikelihood // Финальная метрика правдоподобия
+    };
+}
+
+res = calculateLinearMLE( x_d, y_d );
+console.log( res );
+function calculateLognormalMLE(x, y) {
+    var n = x.length;
+    if (n === 0 || n !== y.length) return null;
+
+    // В логарифмических координатах логнормальное распределение — это квадратичная модель: y = a*x^2 + b*x + c
+    // Находим параметры через систему линейных уравнений (МНК/MLE для параболы)
+    var sX = 0, sX2 = 0, sX3 = 0, sX4 = 0;
+    var sY = 0, sXY = 0, sX2Y = 0;
+
+    for (var i = 0; i < n; i++) {
+        var xi = x[i];
+        var yi = y[i];
+        var x2 = xi * xi;
+        
+        sX += xi;     sX2 += x2;     sX3 += x2 * xi;     sX4 += x2 * x2;
+        sY += yi;     sXY += xi * yi; sX2Y += x2 * yi;
+    }
+
+    // Решаем матричное уравнение 3х3 методом Крамера
+    var det = n*(sX2*sX4 - sX3*sX3) - sX*(sX*sX4 - sX2*sX3) + sX2*(sX*sX3 - sX2*sX2);
+    if (Math.abs(det) < 1e-12) return null;
+
+    var detA = sY*(sX2*sX4 - sX3*sX3) - sX*(sXY*sX4 - sX3*sX2Y) + sX2*(sXY*sX3 - sX2*sX2Y);
+    var detB = n*(sXY*sX4 - sX3*sX2Y) - sY*(sX*sX4 - sX2*sX3) + sX2*(sX*sX2Y - sXY*sX2);
+    var detC = n*(sX2*sX2Y - sX3*sXY) - sX*(sX*sX2Y - sX2*sXY) + sY*(sX*sX3 - sX2*sX2);
+
+    var a = detA / det;
+    var b = detB / det;
+    var c = detC / det;
+
+    // Считаем сумму квадратов ошибок и находим MLE-оценку шума (sigma)
+    var sumSquaredErrors = 0;
+    for (var i = 0; i < n; i++) {
+        var pred = a * x[i] * x[i] + b * x[i] + c;
+        var error = y[i] - pred;
+        sumSquaredErrors += error * error;
+    }
+    var sigmaSquared = sumSquaredErrors / n;
+    var sigma = Math.sqrt(sigmaSquared);
+
+    // Вычисляем максимальное Лог-Правдоподобие (Log-Likelihood)
+    var logLikelihood = 0;
+    var constantPart = -0.5 * Math.log(2 * Math.PI);
+    
+    for (var i = 0; i < n; i++) {
+        var pred = a * x[i] * x[i] + b * x[i] + c;
+        var error = y[i] - pred;
+        logLikelihood += -Math.log(sigma) + constantPart - (error * error) / (2 * sigmaSquared);
+    }
+
+    return {
+        logLikelihood: logLikelihood,
+        sigma: sigma
+    };
+}
+
+res2 = calculateLognormalMLE( x_d, y_d );
+console.log( res2 );
+
+var R = res.logLikelihood - res2.logLikelihood;
+
+// Тест отношения правдоподобий (Likelihood Ratio Test)
+var LR_statistic = 2 * Math.abs(R);
+
+// Простая функция для аппроксимации p-value распределения Хи-квадрат с 1 степенью свободы
+function chi2_pvalue(chi2) {
+    if (chi2 < 0) return 1;
+    // Аппроксимация функции ошибок для 1 степени свободы
+    var x = Math.sqrt(chi2 / 2);
+    var t = 1.0 / (1.0 + 0.5 * x);
+    var ans = t * Math.exp(-x * x - 1.26551223 + t * (1.00002368 + t * (0.37380870 + t * (0.09140461 + 
+              t * (-0.01843403 + t * (0.39791134 + t * (-0.39921414 + t * (0.01067417 + 
+              t * (0.64375491 + t * (-0.37688340 + t * 0.01032854))))))))));
+    return ans;
+}
+
+var p_value = chi2_pvalue(LR_statistic);
+
+console.log("--- СРАВНЕНИЕ МОДЕЛЕЙ В JS ---");
+console.log("Степенной LogL:", res.logLikelihood);
+console.log("Логнормальный LogL:", res2.logLikelihood);
+console.log("Разность правдоподобий (R):", R);
+console.log("p-value сравнения моделей:", p_value);
+
+</script>
+</body>
+</html>

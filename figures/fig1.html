@@ -1,0 +1,64 @@
+<html>
+<body>
+
+<svg width="400" height="400">
+<g transform="translate(50,50)">
+<path id="p0" d="" stroke="black" fill="none" stroke-width="2"/>
+<path id="p1" d="" stroke="black" fill="none" stroke-width="2"/>
+<path id="p2" d="" stroke="black" fill="none" stroke-width="2"/>
+<path id="p3" d="" stroke="black" fill="none" stroke-width="2"/>
+<path id="p4" d="" stroke="black" fill="none" stroke-width="2"/>
+<path id="p5" d="" stroke="black" fill="none" stroke-width="2" stroke-dasharray="4" />
+<line x1="0" x2="0" y1="0" y2="300" stroke="black"/>
+<line x1="0" x2="300" y1="300" y2="300" stroke="black"/>
+<text x="-150" y="-25" font-family="sans-serif" font-size="14" font-weight="bold" transform="rotate(-90)" text-anchor="middle">number of matches</text>
+<text x="150" y="340" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">coverage value</text>
+<text x="50" y="315" font-family="sans-serif" font-size="12" text-anchor="middle">10</text><line x1="50" x2="50" y1="300" y2="304" stroke="black" />
+<text x="100" y="315" font-family="sans-serif" font-size="12" text-anchor="middle">20</text><line x1="100" x2="100" y1="300" y2="304" stroke="black" />
+<text x="150" y="315" font-family="sans-serif" font-size="12" text-anchor="middle">30</text><line x1="150" x2="150" y1="300" y2="304" stroke="black" />
+<text x="200" y="315" font-family="sans-serif" font-size="12" text-anchor="middle">40</text><line x1="200" x2="200" y1="300" y2="304" stroke="black" />
+</g>
+</svg>
+<script>
+function factorial( n )
+{
+	if ( n <= 1 ) return 1;
+	return n * factorial( n - 1 );
+}
+function poisson( c, i )
+{
+	return Math.pow( c, i ) * Math.exp( - c ) / factorial( i );
+}
+var s0 = "M ";
+var s1 = "M ";
+var s2 = "M ", s3 = "M ", s4 ="M "
+var s5 = "M "
+var i;
+for ( i = 0; i < 100; i++ )
+{
+	s0 += ( ( i * 5 ) + "," + ( 300 - poisson( 2, i ) * 1000 ) + " " );
+}
+for ( i = 0; i < 100; i++ )
+{
+	s1 += ( ( i * 5 ) + "," + ( 300 - poisson( 5, i ) * 1000 ) + " " );
+}
+for ( i = 0; i < 100; i++ )
+{
+	s2 += ( ( i * 5 ) + "," + ( 300 - poisson( 10, i ) * 1000 ) + " " );
+	s3 += ( ( i * 5 ) + "," + ( 300 - poisson( 20, i ) * 1000 ) + " " );
+	s4 += ( ( i * 5 ) + "," + ( 300 - poisson( 40, i ) * 1000 ) + " " );
+}
+for ( i = 15; i < 70; i++ )
+{
+	s5 += ( ( i * 5 ) + "," + ( 300 - Math.pow( i, -0.5 ) * 392 ) + " " );
+}
+
+document.getElementById( "p0" ).setAttribute( "d", s0 );
+document.getElementById( "p1" ).setAttribute( "d", s1 );
+document.getElementById( "p2" ).setAttribute( "d", s2 );
+document.getElementById( "p3" ).setAttribute( "d", s3 );
+document.getElementById( "p4" ).setAttribute( "d", s4 );
+document.getElementById( "p5" ).setAttribute( "d", s5 );
+</script>
+</body>
+</html>
